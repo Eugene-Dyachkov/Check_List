@@ -1,0 +1,124 @@
+WindowManager:
+    Authorization:
+    MainWindow:
+    Register:
+
+
+<Authorization>:
+    name: "authorization"
+    BoxLayout:
+        padding: 20
+        spacing: "20dp"
+        orientation: "vertical"
+        pos_hint: {"top":1}
+        Image:
+            size_hint: (.7, .7)
+            pos_hint: {"center_x":.5,"y":1}
+            source: 'logo.png'
+        MDTextField:
+            font_name: "fonts/font1.TTF"
+            pos_hint: {"center_x":.5,"center_y":1}
+            font_size: '16'
+            hint_text: "Login"
+        MDTextField:
+            font_name: "fonts/font1.TTF"
+            pos_hint: {"center_x":.5,"center_y":1}
+            font_size: '16'
+            hint_text: "Password"
+
+        MDRectangleFlatButton:
+            font_name: "fonts/font1.TTF"
+            pos_hint: {"center_x":.5,"center_y":1}
+            text: "Sign in"
+            font_size: '20'
+            on_release:
+                app.root.current = "main_window"
+
+        MDRectangleFlatButton:
+            font_name: "fonts/font1.TTF"
+            pos_hint: {"center_x":.5,"center_y":1}
+            text: "Register"
+            font_size: '20'
+            on_release:
+                app.root.current = "register"
+
+
+<Register>:
+    name: "register"
+    BoxLayout:
+        padding: 20
+        spacing: "20dp"
+        orientation: "vertical"
+        pos_hint: {"center_x":.5,"center_y":.9}
+        MDTextField:
+            font_name: "fonts/font1.TTF"
+            pos_hint: {"center_x":.5,"center_y":1}
+            hint_text: "Username"
+        MDTextField:
+            font_name: "fonts/font1.TTF"
+            pos_hint: {"center_x":.5,"center_y":1}
+            hint_text: "Login"
+        MDTextField:
+            font_name: "fonts/font1.TTF"
+            pos_hint: {"center_x":.5,"center_y":1}
+            hint_text: "Password"
+        MDRectangleFlatButton:
+            font_name: "fonts/font1.TTF"
+            pos_hint: {"center_x":.5,"center_y":1}
+            text: "Register"
+
+        MDRectangleFlatButton:
+            font_name: "fonts/font1.TTF"
+            pos_hint: {"center_x":.5,"center_y":1}
+            text: "Back"
+            on_release:
+                app.root.current = "authorization"
+
+<MainWindow>:
+    name: "main_window"
+
+    MDBottomNavigation:
+        #panel_color: "#eeeaea"
+        selected_color_background: "#0556FA"
+        text_color_active: "#0556FA"
+
+        MDBottomNavigationItem:
+            name: 'screen 1'
+            text: 'Fast'
+            icon: "home.png"
+
+            MDIconButton:
+                icon: "pencil"
+                theme_icon_color: "Custom"
+                icon_color: app.theme_cls.primary_color
+                pos_hint: {"center_x": 0.9, "center_y":0.1}
+                icon_size: "50sp"
+                on_release:
+                    root.new_access()
+            MDScrollView:
+                pos_hint: {"top": 1}
+                do_scroll_x: False
+                do_scroll_y: True
+                GridLayout:
+
+
+        MDBottomNavigationItem:
+            name: 'screen 2'
+            text: 'Projects'
+            icon: "projects.png"
+
+            MDScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+                MDList:
+                    OneLineIconListItem:
+                        text: "Single-line item with avatar"
+
+        MDBottomNavigationItem:
+            name: 'screen 3'
+            text: 'Account'
+            icon: "account.png"
+
+            MDLabel:
+                text: 'LinkedIN'
+                halign: 'center'
