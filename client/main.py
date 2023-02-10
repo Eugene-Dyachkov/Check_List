@@ -3,6 +3,15 @@ from kivymd.uix.screenmanager import ScreenManager
 from kivymd.uix.screen import Screen
 from kivy.lang import Builder
 
+
+import socket
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(('localhost', 5000))
+client.sendall(bytes("XUN", "UTF-8"))
+
+
+
 class MainWindow(Screen):
 
     def new_access(self):
@@ -16,7 +25,9 @@ class Authorization(Screen):
         pass
 
 class Register(Screen):
-    pass
+    def registration(self):
+        global client
+        client.sendall(bytes("Registration", "UTF-8"))
 
 
 
