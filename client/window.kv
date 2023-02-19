@@ -4,8 +4,13 @@ WindowManager:
     Register:
 
 
+
 <Authorization>:
     name: "authorization"
+    login:login
+    password:password
+
+
     BoxLayout:
         padding: 20
         spacing: "20dp"
@@ -16,11 +21,13 @@ WindowManager:
             pos_hint: {"center_x":.5,"y":1}
             source: 'logo.png'
         MDTextField:
+            id: login
             font_name: "fonts/font1.TTF"
             pos_hint: {"center_x":.5,"center_y":1}
             font_size: '16'
             hint_text: "Login"
         MDTextField:
+            id: password
             font_name: "fonts/font1.TTF"
             pos_hint: {"center_x":.5,"center_y":1}
             font_size: '16'
@@ -32,7 +39,7 @@ WindowManager:
             text: "Sign in"
             font_size: '20'
             on_release:
-                app.root.current = "main_window"
+                root.login_btn(app)
 
         MDRectangleFlatButton:
             font_name: "fonts/font1.TTF"
@@ -44,6 +51,10 @@ WindowManager:
 
 
 <Register>:
+    username:username
+    login:login
+    password:password
+
     name: "register"
     BoxLayout:
         padding: 20
@@ -51,14 +62,20 @@ WindowManager:
         orientation: "vertical"
         pos_hint: {"center_x":.5,"center_y":.9}
         MDTextField:
+            id: username
+
             font_name: "fonts/font1.TTF"
             pos_hint: {"center_x":.5,"center_y":1}
             hint_text: "Username"
         MDTextField:
+            id:login
+
             font_name: "fonts/font1.TTF"
             pos_hint: {"center_x":.5,"center_y":1}
             hint_text: "Login"
         MDTextField:
+            id: password
+
             font_name: "fonts/font1.TTF"
             pos_hint: {"center_x":.5,"center_y":1}
             hint_text: "Password"
@@ -79,6 +96,7 @@ WindowManager:
 <MainWindow>:
     name: "main_window"
 
+
     MDBottomNavigation:
         #panel_color: "#eeeaea"
         selected_color_background: "#0556FA"
@@ -96,12 +114,16 @@ WindowManager:
                 pos_hint: {"center_x": 0.9, "center_y":0.1}
                 icon_size: "50sp"
                 on_release:
-                    root.new_access()
+                    root.login_in()
+
             MDScrollView:
+                id: notes
                 pos_hint: {"top": 1}
                 do_scroll_x: False
                 do_scroll_y: True
                 GridLayout:
+
+
 
 
         MDBottomNavigationItem:
