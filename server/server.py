@@ -1,6 +1,8 @@
 from setings_sql import host, user, password, db_name
 import pymysql
 import threading
+import pickle
+
 class DataBase():
 
     def __init__(self):
@@ -33,25 +35,16 @@ class DataBase():
                 "PRIMARY KEY(us_id));"
                 )
 
-            # Create table projects
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS projects(pr_id int AUTO_INCREMENT,"\
-                "name varchar(32) NOT NULL,"\
-                "user_id int NOT NULL,"\
-                "FOREIGN KEY (user_id) REFERENCES users(us_id),"\
-                "PRIMARY KEY(pr_id));"
-                )
-
             # Create table notes
             self.cursor.execute("CREATE TABLE IF NOT EXISTS notes(no_id int AUTO_INCREMENT,"\
                 "headind varchar(32) NOT NULL,"\
                 "text varchar(150),"\
-                "project_id int NOT NULL,"\
-                "FOREIGN KEY (project_id) REFERENCES projects(pr_id),"\
+                "user_id int NOT NULL,"\
+                "FOREIGN KEY (user_id) REFERENCES users(us_id),"\
                 "PRIMARY KEY(no_id));"
                 )
             print("Is complite!")
-        finally:
-            # self.connection.close()
+        except:
             pass
 
     def registration(self, msg):
@@ -91,17 +84,77 @@ class DataBase():
         except Exception:
             return "Error, try later!"
 
-    def update(self, msg):
+    def user_data(self, msg):
         try:
             self.cursor = self.connection.cursor() # Create cursor
-            print(msg[1])
             try:
-                self.cursor.execute(f''' SELECT us_id FROM users WHERE login = "{msg[1]}"''')
-                return self.cursor.fetchall()
+                self.cursor.execute(f''' SELECT us_id, username, login FROM users WHERE login = "{msg[1]}"''')
+                data=pickle.dumps(self.cursor.fetchall())
+                return data
             except Exception:
                 return "Error, try later!"
         except Exception:
             return "Error, try later!"
+
+    def new_notes(self, msg):
+        try:
+            self.cursor = self.connection.cursor() # Create cursor
+            try:
+                self.cursor.execute (f''' INSERT INTO notes
+                    (headind, text, user_id)
+                    VALUES('{msg[1]}','{msg[2]}','{msg[3]}');''')
+
+                self.connection.commit()
+                return "Note added!"
+
+            except pymysql.err.IntegrityError:
+                return "Error, try later!"
+
+        except Exception as ex:
+            return "Error, try later!"
+
+    def update(self, msg):
+        try:
+            self.cursor = self.connection.cursor() # Create cursor
+            try:
+                # INSERT INTO users (headind, text, user_id) VALUES('111','222','333');
+                self.cursor.execute(f''' SELECT no_id, headind, text FROM notes WHERE user_id = "{msg[1]}"''')
+                data=pickle.dumps(self.cursor.fetchall())
+                return data
+            except Exception:
+                return "Error, try later!"
+        except Exception:
+            return "Error, try later!"
+
+    def DelNotes(self, msg):
+        try:
+            self.cursor = self.connection.cursor() # Create cursor
+            for note in msg:
+                print(note)
+                if note != msg[0] and note != msg[1]:
+                    self.cursor.execute (f'''DELETE FROM notes WHERE headind = "{note}" AND user_id = {msg[1]};''')
+                    self.connection.commit()
+            return "Delete!"
+        except Exception:
+                return "Error, try later!"
+
+    def change_password(self, msg):
+        try:
+            print(msg)
+            self.cursor = self.connection.cursor() # Create cursor
+            try:
+                self.cursor.execute (f'''UPDATE users SET password = "{msg[2]}" WHERE us_id = {int(msg[1])};''')
+
+                self.connection.commit()
+
+                return "You change password!"
+            except Exception as ex:
+                print(ex)
+
+        except Exception:
+                return "Error, try later!"
+
+
 
 import threading
 import socket
@@ -137,7 +190,7 @@ class Server():
             else:
                 yield ('write', client_socket)
                 msg = request.decode()
-                msg = (msg.split(' '))
+                msg = (msg.split('&'))
                 thread = threading.Thread(target= self.msg_process, args=(client_socket, msg))
                 thread.start()
 
@@ -152,7 +205,16 @@ class Server():
         elif msg[0] == "Login":
             client_socket.send(data.login_in(msg).encode("UTF-8"))
         elif msg[0] == "Update":
-            client_socket.send(data.update(msg).encode("UTF-8"))
+            client_socket.send(data.update(msg))
+        elif msg[0] == "NewNotes":
+            client_socket.send(data.new_notes(msg).encode("UTF-8"))
+        elif msg[0] == "UserD":
+            client_socket.send(data.user_data(msg))
+        elif msg[0] == "DelNotes":
+            client_socket.send(data.DelNotes(msg).encode("UTF-8"))
+        elif msg[0] == "Password":
+            client_socket.send(data.change_password(msg).encode("UTF-8"))
+
 
     def event_loop(self):
 

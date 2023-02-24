@@ -4,6 +4,26 @@ WindowManager:
     Register:
 
 
+<MyItem>
+    text: "Two-line item with avatar"
+    secondary_text: "Secondary text here"
+    font_name: "fonts/font1.TTF"
+    _no_ripple_effect: True
+    ImageLeftWidget:
+        source: "doc.png"
+
+<NewNotes>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "120dp"
+
+    MDTextField:
+        hint_text: "headind"
+
+    MDTextField:
+        hint_text: "text"
+
 
 <Authorization>:
     name: "authorization"
@@ -96,6 +116,8 @@ WindowManager:
 <MainWindow>:
     name: "main_window"
 
+    toolbar:toolbar
+    selection_list:selection_list
 
     MDBottomNavigation:
         #panel_color: "#eeeaea"
@@ -104,45 +126,62 @@ WindowManager:
 
         MDBottomNavigationItem:
             name: 'screen 1'
-            text: 'Fast'
+            text: 'Notes'
             icon: "home.png"
+            MDBoxLayout:
+                orientation: "vertical"
 
-            MDIconButton:
-                icon: "pencil"
-                theme_icon_color: "Custom"
-                icon_color: app.theme_cls.primary_color
-                pos_hint: {"center_x": 0.9, "center_y":0.1}
-                icon_size: "50sp"
-                on_release:
-                    root.login_in()
+                MDTopAppBar:
+                    id: toolbar
+                    title: "Notes"
+                    md_bg_color: "#040184"
+                    right_action_items: [["plus", lambda x: app.root.add_new_note(x)]]
+                    left_action_items: [["update", lambda x: app.root.update(x)]]
 
-            MDScrollView:
-                id: notes
-                pos_hint: {"top": 1}
-                do_scroll_x: False
-                do_scroll_y: True
-                GridLayout:
-
-
-
+                ScrollView:
+                    MDSelectionList:
+                        id: selection_list
+                        spacing: "12dp"
+                        on_selected_mode: app.root.set_selection_mode(*args)
+                        on_selected: app.root.on_selected(*args)
 
         MDBottomNavigationItem:
             name: 'screen 2'
-            text: 'Projects'
-            icon: "projects.png"
-
-            MDScrollView:
-                do_scroll_x: False
-                do_scroll_y: True
-                MDList:
-                    OneLineIconListItem:
-                        text: "Single-line item with avatar"
-
-        MDBottomNavigationItem:
-            name: 'screen 3'
             text: 'Account'
             icon: "account.png"
+            on_tab_press: app.root.set_user_data(*args)
+            BoxLayout:
+                padding: 20
+                spacing: "30dp"
+                orientation: "vertical"
 
-            MDLabel:
-                text: 'LinkedIN'
-                halign: 'center'
+                GridLayout:
+                    cols: 2
+                    rows:2
+                    MDLabel:
+                        font_size: '30'
+                        text: "Username:"
+                    MDLabel:
+                        id: username_label
+                        font_size: '30'
+                        text: ""
+                    MDLabel:
+                        font_size: '30'
+                        text: "Login:"
+                    MDLabel:
+                        id: login_label
+                        font_size: '30'
+                        text: ""
+                MDLabel:
+                    font_size: '16'
+                    text: "Change password"
+
+                MDTextField:
+                    id: NewPass
+
+                    hint_text: "New Password"
+
+                MDRectangleFlatButton:
+                    text: "Change"
+                    on_release:
+                        app.root.change_password()
