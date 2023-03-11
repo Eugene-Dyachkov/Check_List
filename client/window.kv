@@ -53,7 +53,7 @@ WindowManager:
             font_size: '16'
             hint_text: "Password"
 
-        MDRectangleFlatButton:
+        MDFlatButton:
             font_name: "fonts/font1.TTF"
             pos_hint: {"center_x":.5,"center_y":1}
             text: "Sign in"
@@ -61,7 +61,7 @@ WindowManager:
             on_release:
                 root.login_btn(app)
 
-        MDRectangleFlatButton:
+        MDFlatButton:
             font_name: "fonts/font1.TTF"
             pos_hint: {"center_x":.5,"center_y":1}
             text: "Register"
@@ -99,14 +99,14 @@ WindowManager:
             font_name: "fonts/font1.TTF"
             pos_hint: {"center_x":.5,"center_y":1}
             hint_text: "Password"
-        MDRectangleFlatButton:
+        MDFlatButton:
             font_name: "fonts/font1.TTF"
             pos_hint: {"center_x":.5,"center_y":1}
             text: "Register"
             on_release:
                 root.registration()
 
-        MDRectangleFlatButton:
+        MDFlatButton:
             font_name: "fonts/font1.TTF"
             pos_hint: {"center_x":.5,"center_y":1}
             text: "Back"
@@ -181,7 +181,7 @@ WindowManager:
 
                     hint_text: "New Password"
 
-                MDRectangleFlatButton:
+                MDFlatButton:
                     text: "Change"
                     on_release:
                         app.root.change_password()

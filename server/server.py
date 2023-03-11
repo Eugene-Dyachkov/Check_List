@@ -1,18 +1,19 @@
-from setings_sql import host, user, password, db_name
+
 import pymysql
 import threading
 import pickle
+import os
 
 class DataBase():
 
     def __init__(self):
         try:
             self.connection = pymysql.connect(
-                host=host,
-                port=3306,
-                user=user,
-                password=password,
-                database=db_name,
+                host=os.getenv('host'),
+                port=os.getenv('port'),
+                user=os.getenv('user'),
+                password=os.getenv('password'),
+                database=os.getenv('database'),
                 cursorclass=pymysql.cursors.DictCursor
             )
         except Exception as ax:
